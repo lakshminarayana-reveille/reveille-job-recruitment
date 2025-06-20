@@ -36,6 +36,8 @@
                     <div class="experience-end-date-field">
                         <x-form-date label="End Date" name="experience[{{ $index }}][duration_end]" :value="old('experience.'.$index.'.duration_end', $experience['duration_end'] ?? '')" />
                     </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     <div>
                         <label class="flex items-center">
                             <input type="checkbox" name="experience[{{ $index }}][currently_working]" value="1" class="currently-working-checkbox h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" {{ old('experience.'.$index.'.currently_working', $experience['currently_working'] ?? '') ? 'checked' : '' }}>
@@ -46,6 +48,7 @@
                         <x-form-input label="Responsibilities/Key Projects" name="experience[{{ $index }}][responsibilities]" type="textarea" required>{{ old('experience.'.$index.'.responsibilities', $experience['responsibilities'] ?? '') }}</x-form-input>
                     </div>
                 </div>
+
             </div>
         @endforeach
     </div>
