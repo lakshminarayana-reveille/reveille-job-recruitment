@@ -8,8 +8,16 @@ use Illuminate\Support\Facades\Validator;
 
 class RecruitmentController extends Controller
 {
-    public function showForm()
+    public function showForm(Request $request)
     {
+        // Allow step navigation via query parameter for the "Previous" button
+        if ($request->has('step')) {
+            $step = (int)$request->query('step');
+            if ($step >= 1 && $step <= 7) {
+                Session::put('current_step', $step);
+            }
+        }
+
         $formData = Session::get('job_application', []);
         return view('recruitment', compact('formData'));
     }
@@ -18,119 +26,100 @@ class RecruitmentController extends Controller
     {
         $validators = [
             1 => [
-                'first_name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
+                'name' => 'required|string|max:255',
                 'email' => 'required|email|max:255',
-                'phone' => 'required|string|max:20',
-                'dob' => 'required|date',
-                'gender' => 'nullable|string|in:male,female,other',
-                'nationality' => 'required|string|max:255',
+                'contact_number' => 'required|integer|min:10|digits_between:10,10',
             ],
             2 => [
-                'current_address' => 'required|string',
-                'permanent_address' => 'nullable|string',
-                'city' => 'required|string|max:255',
-                'state' => 'required|string|max:255',
-                'zip' => 'required|string|max:20',
-                'country' => 'required|string|max:255',
+                'position_applied' => 'required|string|max:255',
+                'dob' => 'required|date',
+                'gender' => 'required|string|in:male,female',
+                'blood_group' => 'nullable|string|max:10',
+                'marital_status' => 'required|string|in:single,married,divorced,widowed',
+                'nationality' => 'required|string|max:255',
             ],
             3 => [
-                'job_title' => 'required|string|max:255',
-                'job_location' => 'required|string|max:255',
-                'work_type' => 'required|string|in:full-time,part-time,remote,contract',
-                'salary' => 'required|string|max:255',
-                'start_date' => 'required|date',
-                'source' => 'required|string|in:referral,job-portal,company-website,other',
+                'present_address' => 'required|string',
+                'permanent_address' => 'nullable|string',
             ],
             4 => [
-                'education' => 'required|array',
-                'education.*.degree' => 'required|string|max:255',
-                'education.*.institution' => 'required|string|max:255',
-                'education.*.year_passing' => 'required|integer|min:1900|max:' . date('Y'),
-                'education.*.gpa' => 'required|string|max:10',
-                'experience' => 'required|array',
-                'experience.*.company' => 'required|string|max:255',
-                'experience.*.job_title' => 'required|string|max:255',
-                'experience.*.duration_start' => 'required|date',
-                'experience.*.duration_end' => 'nullable|date|after_or_equal:experience.*.duration_start',
-                'experience.*.responsibilities' => 'required|string',
+                'education_qualification' => 'required|string|max:255',
+                'total_experience' => 'required|integer|min:0',
+                'relevant_experience' => 'nullable|integer|min:0',
+                'current_ctc' => 'required|string|max:255', // Assuming CTC can be a string like "5 LPA"
+                'expected_ctc' => 'required|string|max:255', // Assuming CTC can be a string like "7 LPA"
             ],
             5 => [
-                'skills' => 'required|string',
-                'certifications' => 'nullable|array',
-                'certifications.*.name' => 'nullable|string|max:255',
-                'certifications.*.authority' => 'nullable|string|max:255',
-                'certifications.*.year' => 'nullable|integer|min:1900|max:' . date('Y'),
-                'resume' => 'required|file|mimes:pdf,doc,docx|max:2048',
-                'cover_letter' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-                'portfolio' => 'nullable|file|max:2048',
-                'certificates' => 'nullable|array',
-                'certificates.*' => 'nullable|file|mimes:pdf|max:2048',
-                'photo' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-                'relocate' => 'required|string|in:yes,no',
-                'eligible' => 'required|string|in:yes,no',
-                'notice_period' => 'required|integer|min:0',
+                'applied_before' => 'required|in:yes,no',
+                'applied_before_details' => 'required_if:applied_before,yes|nullable|string|max:1000',
+            ],
+            6 => [
+                'has_relatives' => 'required|in:yes,no',
+                'relatives_details' => 'required_if:has_relatives,yes|nullable|string|max:1000',
+            ],
+            7 => [
                 'references' => 'nullable|array',
                 'references.*.name' => 'nullable|string|max:255',
-                'references.*.contact' => 'nullable|string|max:255',
-                'references.*.relationship' => 'nullable|string|max:255',
-                'comments' => 'nullable|string',
-                'declaration' => 'required|accepted',
-                'consent' => 'required|accepted',
+                'references.*.designation' => 'nullable|string|max:255',
+                'references.*.company' => 'nullable|string|max:255',
+                'references.*.mobile' => 'nullable|string|max:20',
             ],
         ];
 
         $validator = Validator::make($request->all(), $validators[$step] ?? []);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput()->with('current_step', $step);
+            return redirect()->route('recruitment.show')->withErrors($validator)->withInput()->with('current_step', $step);
         }
 
         $formData = Session::get('job_application', []);
 
-        // Handle file uploads for step 5
-        if ($step == 5) {
-            if ($request->hasFile('resume')) {
-                $formData['resume'] = $request->file('resume')->store('job-applications');
-            }
-            if ($request->hasFile('cover_letter')) {
-                $formData['cover_letter'] = $request->file('cover_letter')->store('job-applications');
-            }
-            if ($request->hasFile('portfolio')) {
-                $formData['portfolio'] = $request->file('portfolio')->store('job-applications');
-            }
-            if ($request->hasFile('photo')) {
-                $formData['photo'] = $request->file('photo')->store('job-applications');
-            }
-            if ($request->hasFile('certificates')) {
-                $formData['certificates'] = [];
-                foreach ($request->file('certificates') as $certificate) {
-                    $formData['certificates'][] = $certificate->store('job-applications');
-                }
-            }
+        // Merge form data
+        // For array inputs like 'references', ensure they are merged correctly
+        if (isset($validators[$step]['references'])) {
+            $currentReferences = $formData['references'] ?? [];
+            $newReferences = $request->input('references', []);
+            // This simple merge will overwrite existing references if keys match.
+            // For dynamic arrays, you might need more sophisticated merging if you want to preserve specific old entries.
+            // For this multi-step form, we assume the user is editing the current step's data.
+            $formData['references'] = $newReferences;
         }
 
-        // Merge form data
-        $formData = array_merge($formData, $request->except(['_token', 'resume', 'cover_letter', 'portfolio', 'certificates', 'photo']));
+        $formData = array_merge($formData, $request->except(['_token', 'references'])); // Exclude 'references' if handled separately
         Session::put('job_application', $formData);
         Session::put('current_step', $step);
 
-        if ($step < 5) {
+        if ($step < 7) {
             return redirect()->route('recruitment.show')->with('current_step', $step + 1);
         }
 
+        // If it's the last step, stay on the page to show the submit button
         return redirect()->route('recruitment.show')->with('current_step', $step);
     }
 
     public function submit(Request $request)
     {
+        // It's highly recommended to re-validate all collected data here before final submission
+        // to ensure data integrity, as users could skip steps or manipulate session data.
+        // For brevity, this example assumes data is valid from previous steps.
+
         $formData = Session::get('job_application', []);
 
-        // Here, you can save $formData to the database or send it via email
+        // Here, you would typically save $formData to the database or send it via email.
+        // Example: \App\Models\JobApplication::create($formData);
+        // Make sure you have a JobApplication model and migration set up for this.
+
         // For now, we'll clear the session and show a success message
         Session::forget('job_application');
         Session::forget('current_step');
 
         return redirect()->route('recruitment.show')->with('success', 'Application submitted successfully!');
+    }
+
+    public function reset(Request $request)
+    {
+        Session::forget('job_application');
+        Session::forget('current_step');
+        return redirect()->route('recruitment.show')->with('success', 'Form reset successfully!');
     }
 }
