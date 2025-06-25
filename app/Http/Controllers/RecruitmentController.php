@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use App\Models\JobApplication; // Import the new model
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 
@@ -121,7 +122,7 @@ class RecruitmentController extends Controller
 
         // Now, handle file uploads and update formData with their paths
         if ($request->hasFile('resume')) {
-            $formData['resume'] = $request->file('resume')->store('recruitment-applications/resumes');
+            $formData['resume_path'] = $request->file('resume')->store('recruitment-applications/resumes');
         }
         if ($request->hasFile('photo')) {
             $formData['photo'] = $request->file('photo')->store('recruitment-applications/resumes');
@@ -132,24 +133,33 @@ class RecruitmentController extends Controller
             $formData['references'] = $request->input('references');
         }
 
+        $formData['applied_before'] = ($formData['applied_before'] === 'yes');
+        $formData['has_relatives'] = ($formData['has_relatives'] === 'yes');
+
         // At this point, $formData contains all collected data, including file paths.
         // You would typically save $formData to the database or send it via email.
         // Example: \App\Models\JobApplication::create($formData);
         // Make sure you have a JobApplication model and migration set up for this.
 
-        $resumePath = $formData['resume'];
+        $resumePath = $formData['resume_path'];
         $resumeUrl = asset('storage/' . $resumePath);
         $photoPath = $formData['photo'] ?? null;
         $photoUrl = $photoPath ? asset('storage/' . $photoPath) : null;
 
-        // Log the submission for debugging
-        Log::info('Job Application Submitted', [
-            'formData' => $formData,
-            'resumePath' => $resumePath,
-            'resumeUrl' => $resumeUrl,
-            'photoPath' => $photoPath,
-            'photoUrl' => $photoUrl,
-        ]);
+        try {
+            // Save the data to the database
+            JobApplication::create($formData);
+            Log::info('Job Application saved to database successfully.', [
+                'formData' => $formData,
+                'resumePath' => $resumePath,
+                'resumeUrl' => $resumeUrl,
+                'photoPath' => $photoPath,
+                'photoUrl' => $photoUrl,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error saving job application to database: ' . $e->getMessage(), ['formData' => $formData]);
+            return redirect()->route('recruitment.show')->with('error', 'Failed to submit application. Please try again.')->withInput()->with('current_step', 7);
+        }
 
 
         Session::forget('job_application');
