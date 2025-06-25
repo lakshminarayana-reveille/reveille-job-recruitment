@@ -172,7 +172,13 @@
 
             <!-- Step 7: References -->
             <div id="step-7" class="step {{ session('current_step', 1) != 7 ? 'hidden' : '' }}">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">References</h2>
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">References & Documents</h2>
+                <!-- Documents -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <x-form-input label="Resume (PDF only)" name="resume" id="resume" type="file" accept=".pdf" required />
+                    <x-form-input label="Photo (Optional)" name="photo" id="photo" description="Supported formats: JPG, PNG Only (Max 300kB)" type="file" accept="image/*" />
+                </div>
+
                 <div id="referencesContainer">
                     @php $references = old('references', $formData['references'] ?? [['name' => '', 'designation' => '', 'company' => '', 'mobile' => '']]); @endphp
                     @foreach ($references as $index => $reference)

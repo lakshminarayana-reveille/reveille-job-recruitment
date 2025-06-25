@@ -1,4 +1,4 @@
-@props(['label', 'name', 'type' => 'text', 'placeholder' => '', 'id' => null, 'value' => null, 'options' => [], 'checkedValue' => null])
+@props(['label', 'name', 'description' => 'Supported formats: PDF, DOCX, Images (Max 1MB)', 'type' => 'text', 'placeholder' => '', 'id' => null, 'value' => null, 'options' => [], 'checkedValue' => null])
 {{-- The 'value' prop was added to allow pre-filling input fields, common for edit forms or when repopulating from old input/session data --}}
 {{-- Main container for the input field and its label --}}
 <div class="flex flex-col gap-y-2">
@@ -21,7 +21,7 @@
                 class="flex flex-col items-center justify-center w-full h-24 cursor-pointer">
                 <div class="flex flex-col items-center justify-center">
                     <p class="file-upload-main-text mb-2 text-sm text-gray-600"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                    <p class="file-upload-formats-text text-xs text-gray-500">Supported formats: PDF, DOCX, Images (Max 10MB)</p>
+                    <p class="file-upload-formats-text text-xs text-gray-500">{{$description}}</p>
                 </div>
                 {{-- Actual file input --}}
                 <input id="{{ $id ?? $name }}" type="file" class="hidden" name="{{ $name }}" {{ $attributes }}>
