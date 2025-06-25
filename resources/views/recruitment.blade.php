@@ -182,26 +182,10 @@
                                 <button type="button" class="remove-reference absolute top-4 right-4 bg-red-500 hover:bg-red-600 text-white text-sm px-2 py-1 rounded">Remove</button>
                             @endif
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <x-form-input label="Name" name="references_{{$index}}_name" id="references_{{$index}}_name" type="text" :value="old('references_{{$index}}_name', $formData['references_{{$index}}_name'] ?? '')" />
-                                    {{-- <label for="references_{{$index}}_name" class="block text-sm font-medium text-gray-700">Name</label>
-                                    <input type="text" name="references[{{$index}}][name]" id="references_{{$index}}_name" value="{{ old('references.'.$index.'.name', $reference['name'] ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"> --}}
-                                </div>
-                                <div>
-                                    <x-form-input label="Designation" name="references_{{$index}}_designation" id="references_{{$index}}_designation" type="text" :value="old('references_{{$index}}_designation', $formData['references_{{$index}}_designation'] ?? '')" />
-                                    {{-- <label for="references_{{$index}}_designation" class="block text-sm font-medium text-gray-700">Designation</label>
-                                    <input type="text" name="references[{{$index}}][designation]" id="references_{{$index}}_designation" value="{{ old('references.'.$index.'.designation', $reference['designation'] ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"> --}}
-                                </div>
-                                <div>
-                                    <x-form-input label="Company" name="references_{{$index}}_company" id="references_{{$index}}_company" type="text" :value="old('references_{{$index}}_company', $formData['references_{{$index}}_company'] ?? '')" />
-                                    {{-- <label for="references_{{$index}}_company" class="block text-sm font-medium text-gray-700">Company</label>
-                                    <input type="text" name="references[{{$index}}][company]" id="references_{{$index}}_company" value="{{ old('references.'.$index.'.company', $reference['company'] ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"> --}}
-                                </div>
-                                <div>
-                                    <x-form-input label="Mobile No" name="references_{{$index}}_mobile" id="references_{{$index}}_mobile" type="tel" :value="old('references_{{$index}}_mobile', $formData['references_{{$index}}_mobile'] ?? '')" />
-                                    {{-- <label for="references_{{$index}}_mobile" class="block text-sm font-medium text-gray-700">Mobile No</label>
-                                    <input type="text" name="references[{{$index}}][mobile]" id="references_{{$index}}_mobile" value="{{ old('references.'.$index.'.mobile', $reference['mobile'] ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"> --}}
-                                </div>
+                                <x-form-input label="Name" name="references[{{$index}}][name]" id="references_{{$index}}_name" type="text" :value="old('references.'.$index.'.name', $reference['name'] ?? '')" />
+                                <x-form-input label="Designation" name="references[{{$index}}][designation]" id="references_{{$index}}_designation" type="text" :value="old('references.'.$index.'.designation', $reference['designation'] ?? '')" />
+                                <x-form-input label="Company" name="references[{{$index}}][company]" id="references_{{$index}}_company" type="text" :value="old('references.'.$index.'.company', $reference['company'] ?? '')" />
+                                <x-form-input label="Mobile No" name="references[{{$index}}][mobile]" id="references_{{$index}}_mobile" type="tel" :value="old('references.'.$index.'.mobile', $reference['mobile'] ?? '')" />
                             </div>
                         </div>
                     @endforeach
@@ -215,13 +199,13 @@
                 <button type="button" id="nextBtn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 {{ session('current_step', 1) == 7 ? 'hidden' : '' }}">Next</button>
                 <button type="submit" id="submitBtn" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 {{ session('current_step', 1) != 7 ? 'hidden' : '' }}">Submit</button>
             </div>
-            <div class="flex justify-end mt-2">
-                <form action="{{ route('recruitment.reset') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="text-red-600 hover:underline">Reset Form</button>
-                </form>
-            </div>
         </form>
+        <div class="flex justify-end mt-2">
+            <form action="{{ route('recruitment.reset') }}" method="POST">
+                @csrf
+                <button type="submit" class="text-red-600 hover:underline">Reset Form</button>
+            </form>
+        </div>
     </div>
 
     <script>
