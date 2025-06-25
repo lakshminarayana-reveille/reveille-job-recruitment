@@ -56,11 +56,11 @@
                 <button type="button" id="nextBtn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 {{ session('current_step', 1) == 5 ? 'hidden' : '' }}">Next</button>
                 <button type="button" id="submitBtn" formaction="{{ route('job-application.submit') }}" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 {{ session('current_step', 1) != 5 ? 'hidden' : '' }}">Submit</button>
             </div>
-            <div class="flex justify-between mt-2">
-                <form action="{{ route('job-application.save-draft') }}" method="POST">
+            <div class="flex justify-end mt-2">
+                {{-- <form action="{{ route('job-application.save-draft') }}" method="POST">
                     @csrf
                     <button type="submit" class="text-blue-600 hover:underline">Save as Draft</button>
-                </form>
+                </form> --}}
                 <form action="{{ route('job-application.reset') }}" method="POST">
                     @csrf
                     <button type="submit" class="text-red-600 hover:underline">Reset Form</button>
