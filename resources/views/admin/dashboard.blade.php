@@ -4,32 +4,31 @@
     <div class="container mx-auto px-4 py-8">
         <div class="bg-white border border-gray-300 rounded-xl overflow-hidden">
             <!-- Header Section -->
-            <div class="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-4 flex justify-between items-center">
+            <div class="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-4 flex flex-col md:flex-row justify-between items-center">
                 <h2 class="text-2xl font-semibold text-white">Job Applications</h2>
-            </div>
-
-            <!-- Search and Filters -->
-            <div class="p-6 bg-gray-50 border-b border-gray-200">
                 <form action="{{ route('admin.applications') }}" method="GET">
-                    <div class="flex justify-end items-center space-x-4">
-                        <div class="relative flex-grow max-w-md">
+                    <div class="flex items-center space-x-4">
+                        <div class="relative max-w-md">
                             <input type="text" name="search" placeholder="Search by name, email, position..."
-                                value="{{ request('search') }}"
-                                class="w-full min-w-[250px] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                   value="{{ request('search') }}"
+                                   class="w-full bg-white min-w-[350px] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <button type="submit"
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
                             Search
                         </button>
                         @if (request('search'))
                             <a href="{{ route('admin.applications') }}"
-                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors">
+                               class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors">
                                 Clear
                             </a>
                         @endif
                     </div>
                 </form>
             </div>
+
+
+            <!-- Search and Filters -->
 
 
 
@@ -41,6 +40,7 @@
                             <tr class="bg-gray-100 text-gray-700 text-sm font-semibold uppercase tracking-wide">
                                 <th class="py-3 px-6 text-left">Name</th>
                                 <th class="py-3 px-6 text-left">Email</th>
+                                <th class="py-3 px-6 text-left">Contact Number</th>
                                 <th class="py-3 px-6 text-left">Position Applied</th>
                                 <th class="py-3 px-6 text-left">Submission Date</th>
                                 <th class="py-3 px-6 text-center">Actions</th>
@@ -51,6 +51,7 @@
                                 <tr class="border-b border-gray-200 hover:bg-gray-50 transition-colors">
                                     <td class="py-4 px-6">{{ $application->name }}</td>
                                     <td class="py-4 px-6">{{ $application->email }}</td>
+                                    <td class="py-4 px-6">{{ $application->contact_number }}</td>
                                     <td class="py-4 px-6">{{ $application->position_applied }}</td>
                                     <td class="py-4 px-6">{{ $application->created_at->format('d-m-Y') }}</td>
                                     <td class="py-4 px-6 text-center">
@@ -74,7 +75,7 @@
 
             <!-- Pagination Section -->
             <div class="p-6 bg-gray-50 border-t border-gray-200">
-                {{ $jobApplications->links() }}
+                {{ $jobApplications->links('vendor.pagination.custom') }}
             </div>
         </div>
     </div>

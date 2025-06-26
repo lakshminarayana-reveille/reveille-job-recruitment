@@ -28,7 +28,7 @@ class DashboardController extends Controller
                 });
             }
 
-            $jobApplications = $query->paginate(10)->appends($request->only('search'));
+            $jobApplications = $query->paginate(2)->appends($request->only('search'));
             return view('admin.dashboard', compact('jobApplications'));
         }
         return redirect('admin.login');
