@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\RecruitmentController;
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,9 +20,17 @@ Route::post('/recruitment/submit', [RecruitmentController::class, 'submit'])->na
 Route::post('/recruitment/reset', [RecruitmentController::class, 'reset'])->name('recruitment.reset');
 
 // Admin routes
-Route::get('/admin/dashboard', function () { return view('admin.dashboard'); })->name('admin.dashboard');
+Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
+    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // Route::get('/applications/{id}', [DashboardController::class, 'showJobApplication'])->name('applications.show');
+    Route::get('/applications', [DashboardController::class, 'index'])->name('applications');
+    Route::get('/applications/{id}', [DashboardController::class, 'showJobApplication'])->name('applications.show');
+    // Route::get('/applications/{id}', [DashboardController::class, 'showJobApplication'])->name('applications.show');
+});
 
 // php artisan make:model Admin -m
 // php artisan migrate
 // php artisan make:migration create_admins_table --create=admins
 // php artisan db:seed --class=AdminSeeder
+// php artisan route:clear
+// php artisan storage:link

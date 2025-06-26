@@ -122,10 +122,10 @@ class RecruitmentController extends Controller
 
         // Now, handle file uploads and update formData with their paths
         if ($request->hasFile('resume')) {
-            $formData['resume_path'] = $request->file('resume')->store('recruitment-applications/resumes');
+            $formData['resume_path'] = $request->file('resume')->store('recruitment-applications/resumes', 'public');
         }
         if ($request->hasFile('photo')) {
-            $formData['photo'] = $request->file('photo')->store('recruitment-applications/resumes');
+            $formData['photo'] = $request->file('photo')->store('recruitment-applications/resumes', 'public');
         }
 
         // Ensure references are also updated from the final request, in case they were modified
