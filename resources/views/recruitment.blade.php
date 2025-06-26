@@ -20,7 +20,7 @@
                 {{ session('success') }}
             </div>
         @endif
-        @if ($errors->any())
+        @if ($errors->any() && session('current_step', 1) === 7)
             <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-md">
                 <ul>
                     @foreach ($errors->all() as $error)
