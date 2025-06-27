@@ -44,6 +44,15 @@ class JobApplication extends Model
         'dob' => 'date',
         'applied_before' => 'boolean',
         'has_relatives' => 'boolean',
+        'photo_path' => 'string', // Ensure photo_path is cast correctly if needed, or just remove if not a specific cast
         'references' => 'array',
     ];
+
+    /**
+     * Get the responses for the job application.
+     */
+    public function responses()
+    {
+        return $this->hasMany(JobApplicationResponse::class);
+    }
 }

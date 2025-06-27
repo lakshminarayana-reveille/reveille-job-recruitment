@@ -25,6 +25,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
     // Route::get('/applications/{id}', [DashboardController::class, 'showJobApplication'])->name('applications.show');
     Route::get('/applications', [DashboardController::class, 'index'])->name('applications');
     Route::get('/applications/{id}', [DashboardController::class, 'showJobApplication'])->name('applications.show');
+    Route::post('/applications/{id}/response', [DashboardController::class, 'storeResponse'])->name('applications.response.store');
     // Route::get('/applications/{id}', [DashboardController::class, 'showJobApplication'])->name('applications.show');
 });
 
