@@ -12,15 +12,14 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        if ($request->expectsJson()) {
-            return null;
+        if (!$request->expectsJson()) {
+            if ($request->is('admin') || $request->is('admin/*')) {
+                return route('admin.login');
+            }
+            return route('recruitment.show');
         }
 
-        if ($request->routeIs('admin.*')) {
-            return route('admin.login');
-        }
-
-        // Redirect to the main page if a non-admin protected route is accessed without authentication.
+        // Redirect non-admin users to the recruitment form
         return route('recruitment.show');
     }
 }

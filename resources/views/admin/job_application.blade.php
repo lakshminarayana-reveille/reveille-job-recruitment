@@ -236,7 +236,6 @@
 
     @push('scripts')
     <script>
-        console.log('Job Application Response Modal Script Loaded');
         document.addEventListener('DOMContentLoaded', function () {
             const modal = document.getElementById('responseModal');
             const replyButton = document.getElementById('replyButton');

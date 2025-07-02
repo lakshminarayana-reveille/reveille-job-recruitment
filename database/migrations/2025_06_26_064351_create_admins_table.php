@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->tinyInteger('is_active')->default(1)->comment('1: Active, 0: Inactive');
+            $table->string('role')->default('admin');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -14,6 +14,7 @@
             <nav>
                 <ul class="flex space-x-4">
                     <li class="border-r border-gray-300 pr-4"><a href="{{ route('admin.applications') }}" class="hover:text-gray-300">Applications</a></li>
+                    <li class="border-r border-gray-300 pr-4"><a href="{{ route('admin.userManagement') }}" class="hover:text-gray-300">Users</a></li>
                     <li>
                         <form action="{{ route('admin.logout') }}" method="POST" class="inline">
                             @csrf

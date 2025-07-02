@@ -21,12 +21,13 @@ Route::post('/recruitment/reset', [RecruitmentController::class, 'reset'])->name
 
 // Admin routes
 Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
-    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    // Route::get('/applications/{id}', [DashboardController::class, 'showJobApplication'])->name('applications.show');
     Route::get('/applications', [DashboardController::class, 'index'])->name('applications');
     Route::get('/applications/{id}', [DashboardController::class, 'showJobApplication'])->name('applications.show');
     Route::post('/applications/{id}/response', [DashboardController::class, 'storeResponse'])->name('applications.response.store');
-    // Route::get('/applications/{id}', [DashboardController::class, 'showJobApplication'])->name('applications.show');
+
+    Route::get('/user-management', [DashboardController::class, 'userManagement'])->name('userManagement');
+    Route::post('/user-managment/create', [DashboardController::class, 'createUser'])->name('userManagement.create');
+    Route::post('/user-management/update/{id}', [DashboardController::class, 'updateUser'])->name('userManagement.update');
 });
 
 // php artisan make:model Admin -m
