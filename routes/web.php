@@ -20,7 +20,7 @@ Route::post('/recruitment/submit', [RecruitmentController::class, 'submit'])->na
 Route::post('/recruitment/reset', [RecruitmentController::class, 'reset'])->name('recruitment.reset');
 
 // Admin routes
-Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth:admin'])->group(function () {
     Route::get('/applications', [DashboardController::class, 'index'])->name('applications');
     Route::get('/applications/{id}', [DashboardController::class, 'showJobApplication'])->name('applications.show');
     Route::post('/applications/{id}/response', [DashboardController::class, 'storeResponse'])->name('applications.response.store');
@@ -34,5 +34,6 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
 // php artisan migrate
 // php artisan make:migration create_admins_table --create=admins
 // php artisan db:seed --class=AdminSeeder
+// php artisan make:middleware AdminAccessMiddleware
 // php artisan route:clear
 // php artisan storage:link
